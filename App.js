@@ -32,60 +32,31 @@ const App = () => {
 
   useEffect(() => {
     const animateBreathing = () => {
-      Animated.loop(
-        Animated.parallel([
-          Animated.sequence([
-            Animated.timing(scale1, {
-              toValue: 2.5,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-            Animated.timing(scale1, {
-              toValue: 1,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.sequence([
-            Animated.timing(opacity1, {
-              toValue: 0,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-            Animated.timing(opacity1, {
-              toValue: 1,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.sequence([
-            Animated.timing(scale2, {
-              toValue: 2,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-            Animated.timing(scale2, {
-              toValue: 1,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.sequence([
-            Animated.timing(opacity2, {
-              toValue: 0,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-            Animated.timing(opacity2, {
-              toValue: 1,
-              duration: 4000,
-              useNativeDriver: true,
-            }),
-          ]),
+      const animation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(scale1, {
+            toValue: 2.5,
+            duration: 4000, // 4 sec inhale
+            useNativeDriver: true,
+          }),
+          Animated.timing(scale1, {
+            toValue: 1,
+            duration: 4000, // 4 sec exhale
+            useNativeDriver: true,
+          }),
         ]),
-      ).start(() => {
+      );
+
+      animation.start();
+
+      let interval = setInterval(() => {
         setBreathText(prev => (prev === 'Inhale' ? 'Exhale' : 'Inhale'));
-      });
+      }, 4000); // Change text every 4 seconds (sync with animation)
+
+      return () => {
+        animation.stop();
+        clearInterval(interval);
+      };
     };
 
     animateBreathing();
@@ -139,7 +110,7 @@ const App = () => {
               inputRange: [1, 2.5],
               outputRange: [20, 50],
             })}
-            opacity={opacity1}
+            // opacity={}
           />
           <AnimatedCircle
             cx="50"
